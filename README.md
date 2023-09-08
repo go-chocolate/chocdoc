@@ -2,6 +2,8 @@
 
 This project contain code generate (to implement pseudo annotation), and should run as an extra part of your project. 
 
+**WARNING**: this project is not stable!
+
 # Feature
 - Low invasive of code
 - Auto analyze URL path and relate it to handler function. (Now, you don't need to write the url path manually)
@@ -14,8 +16,35 @@ Usage:
 ```
 go install github.com/go-chocolate/chocdoc/cmd/ann@latest
 ```
-2. run `ann` in project root directory
-3. use chocdoc to generate documents
+2. define document information in handler
+```go
+
+// Example
+// @summary example
+// @description example handler
+// @request [binding.ExampleRequest]
+// @response [binding.ExampleResponse]
+func ExampleDoc(ctx *gin.Context) {
+
+}
+
+func AnonymousHandler() func(*gin.Context) {
+    return func(ctx *gin.Context){
+    }
+}
+
+func Route(engine *gin.Engine) {
+    engine.GET("/example/hello", ExampleDoc)
+    
+    //or if your handler is an anonymous function, chocdoc cannot relate the routed path with anonymous function. (cannot get the unique function signature)
+    //use an empty doc function as the last middleware to solve it. 
+    engine.GET("/example/hello", AnonymousHandler(), ExampleDoc)
+}
+```
+
+3. run `ann` in project root directory
+
+4. use chocdoc to generate documents
 ```go
 package main
 
@@ -39,32 +68,6 @@ func main() {
 }
 ```
 
-4. define document information in handler
-```go
-
-// Example
-// @summary example
-// @description example handler
-// @request [binding.ExampleRequest]
-// @response [binding.ExampleResponse]
-func ExampleDoc(ctx *gin.Context) {
-    
-}
-
-func AnonymousHandler() func(*gin.Context) {
-    return func(ctx *gin.Context){
-    }
-}
-
-
-func Route(engine *gin.Engine) {
-    engine.GET("/example/hello", ExampleDoc)
-    
-    //or if your handler is an anonymous function, chocdoc cannot relate the routed path with anonymous function. (cannot get the unique function signature)
-    //use an empty doc function as the last middleware to solve it. 
-    engine.GET("/example/hello", AnonymousHandler(), ExampleDoc)
-}
-```
 All the comment that on the top of exported function/struct will be analyzed by `ann`, and auto generate code to relate the function/struct and annotation.
 
 The object in square brackets will be treated as linked struct, and will be created in generated code. Chocdoc can analyze it by use reflect.
