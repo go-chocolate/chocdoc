@@ -59,6 +59,10 @@ func (o *option) from(src *option) {
 }
 
 func IsDotOptionFileExist() bool {
-	_, err := os.Stat(dotOptionFile)
-	return os.IsExist(err)
+	return isFileExist(dotOptionFile)
+}
+
+func isFileExist(filename string) bool {
+	_, err := os.Stat(filename)
+	return err == nil
 }

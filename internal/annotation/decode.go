@@ -26,6 +26,10 @@ func (d *decoder) decode() ([]*file, error) {
 		if path == d.root {
 			return err
 		}
+		if info.IsDir() && isFileExist(path+"/"+dotAnnotationFile) {
+			return filepath.SkipDir
+		}
+
 		if info.IsDir() || !strings.HasSuffix(path, ".go") {
 			return err
 		}
@@ -166,19 +170,20 @@ func (d *decoder) readImports(lastLine string, re *bufio.Reader) []*imports {
 		if line == ")" {
 			return imps
 		}
-		imps = append(imps, d.readImport(lastLine))
+		imps = append(imps, d.readImport(line))
 	}
 }
 
 // 解析单行import
 func (d *decoder) readImport(line string) *imports {
+	line = strings.TrimSpace(strings.TrimPrefix(line, "import"))
 	temp := strings.Fields(line)
 	var im = new(imports)
-	if len(temp) == 2 {
+	if len(temp) == 1 {
+		im.path = strings.Trim(temp[0], "\"")
+	} else if len(temp) == 2 {
 		im.path = strings.Trim(temp[1], "\"")
-	} else if len(temp) == 3 {
-		im.path = strings.Trim(temp[2], "\"")
-		im.alias = []string{temp[1]}
+		im.alias = []string{temp[0]}
 	}
 	if alias := d.replaces[im.path]; len(alias) > 0 {
 		im.alias = append(im.alias, alias...)

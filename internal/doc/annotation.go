@@ -20,12 +20,12 @@ func FromAnnotation(routers []*GINRouter, nodes map[string]*elements.Node) []*do
 			continue
 		}
 		for _, ann := range ele.Annotations {
-			n := strings.Index(ann.Raw, " ")
+			n := strings.Index(ann.Content, " ")
 			if n <= 0 {
 				continue
 			}
-			var key = ann.Raw[:n]
-			var content = strings.TrimSpace(ann.Raw[n+1:])
+			var key = ann.Content[:n]
+			var content = strings.TrimSpace(ann.Content[n+1:])
 			switch key {
 			case "req", "request":
 				if len(ann.Relation) > 0 {
@@ -57,11 +57,11 @@ func FromAnnotation(routers []*GINRouter, nodes map[string]*elements.Node) []*do
 				doc.extra.Add(k, v)
 			}
 
-			if strings.HasPrefix(ann.Raw, "req") {
+			if strings.HasPrefix(ann.Content, "req") {
 				if len(ann.Relation) > 0 {
 					doc.request = ann.Relation[0]
 				}
-			} else if strings.HasPrefix(ann.Raw, "rsp") {
+			} else if strings.HasPrefix(ann.Content, "rsp") {
 				if len(ann.Relation) > 0 {
 					doc.response = ann.Relation[0]
 				}

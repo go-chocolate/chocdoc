@@ -10,7 +10,7 @@ import (
 func main() {
 	var err error
 	if annotation.IsDotOptionFileExist() {
-		err = annotation.Export(annotation.WithSaveDotAnnotationFile())
+		err = annotation.Export(annotation.WithDotAnnotationFile())
 	} else {
 		err = annotation.Export(
 			annotation.WithRoot("."),

@@ -34,6 +34,10 @@ func (a Documents) Group(seps ...string) *DocumentGroup {
 	var groups = &DocumentGroup{Children: make(map[string]*DocumentGroup), Documents: make([]*Document, 0), Root: true}
 	for _, doc := range a {
 		var ptr = groups
+		if doc.Group == "" {
+			ptr.Documents = append(ptr.Documents, doc)
+			continue
+		}
 		names := strings.Split(doc.Group, sep)
 		for n, name := range names {
 			if ptr.Children[name] == nil {

@@ -24,7 +24,7 @@ const (
 
 	annotationTemplate = `        {
 				Raw: "%s",
-				Annotation: "%s",
+				Content: "%s",
 				Relation: []interface{}{%s},
 			}`
 )
