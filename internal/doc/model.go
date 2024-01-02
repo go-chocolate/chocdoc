@@ -141,7 +141,6 @@ func (d *decoder) decode(model interface{}) *Model {
 	m.Array = n
 
 	switch rt.Kind() {
-	//case reflect.Map:
 	case reflect.Struct:
 		for i := 0; i < t.NumField(); i++ {
 			if t.Field(i).Tag.Get("doc") == "-" {

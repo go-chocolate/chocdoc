@@ -1,0 +1,21 @@
+# godoc配置
+#
+# root<string>: godoc运行的根目录，默认为当前目录
+#
+# output<string>: 生成文件输出目录
+#
+# replaces<map[string][]string>: 导包路径别名
+# 某些第三方包的导包路径和实际包名不一致，需要使用别名替换，否则godoc可能无法找到正确的导包路径
+# 
+# 示例: 
+#
+# root: .
+# output: ./godoc
+# replace: 
+#   - github.com/example/example/v1: 
+#       - example1
+#       - example2
+
+root: testdata
+output: testdata/godoc
+replaces: {}

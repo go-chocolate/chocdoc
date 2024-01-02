@@ -8,7 +8,7 @@ func TestDecodeGoMod(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	if m.module != "example" && m.version != "1.19" {
+	if m.module != "example" && m.version != "1.20" {
 		t.Fail()
 	}
 	t.Log(m.module, m.version)

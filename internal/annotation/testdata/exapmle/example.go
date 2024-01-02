@@ -11,7 +11,7 @@ type Request struct {
 
 // Response
 type Response struct {
-	Message `json:"message"`
+	Message string `json:"message"`
 }
 
 // Handle

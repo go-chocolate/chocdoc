@@ -11,6 +11,9 @@ type (
 	Document      = doc.Document
 	Documents     = doc.Documents
 	DocumentGroup = doc.DocumentGroup
+	Model         = doc.Model
+	Field         = doc.Field
+	KV            = doc.KV
 )
 
 func Decode(engine *gin.Engine, annotations map[string]*elements.Node) Documents {
