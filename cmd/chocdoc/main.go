@@ -13,8 +13,8 @@ var (
 )
 
 func init() {
-	flag.StringVar(&root, "root", ".", "godoc执行路径，默认当前目录")
-	flag.StringVar(&output, "output", "./godoc", "godoc生成代码路径，默认 ./godoc")
+	flag.StringVar(&root, "root", ".", "chocdoc执行路径，默认当前目录")
+	flag.StringVar(&output, "output", "./chocdoc", "chocdoc生成代码路径，默认 ./chocdoc")
 	flag.Parse()
 }
 
@@ -33,6 +33,6 @@ func main() {
 		os.Stderr.WriteString(err.Error())
 		os.Exit(1)
 	} else {
-		os.Stdout.WriteString("godoc generated successfully")
+		os.Stdout.WriteString("chocdoc generated successfully")
 	}
 }

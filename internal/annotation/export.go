@@ -29,8 +29,8 @@ func Nodes() map[string]*elements.Node {
 
 `
 
-	dotAnnotationFile    = ".godoc"
-	dotAnnotationContent = "# 本目录由godoc自动生成，请勿修改/添加/移动本目录内任何文件"
+	dotAnnotationFile    = ".chocdoc"
+	dotAnnotationContent = "# 本目录由chocdoc自动生成，请勿修改/添加/移动本目录内任何文件"
 )
 
 var tpl, _ = template.New("annotation").Parse(templateText)
