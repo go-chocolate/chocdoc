@@ -16,7 +16,7 @@ func main() {
 	e := gin.New()
 	router.Router(e)
 	documents := chocdoc.Decode(e, example.Nodes())
-	jsonText := openapi.Export(documents, openapi.Information{Title: "godoc example", Version: "0.0.1"})
+	jsonText := openapi.Export(documents, openapi.Information{Title: "chocdoc example", Version: "0.0.1"})
 	os.Remove("godoc example.json")
 	os.WriteFile("godoc example.json", []byte(jsonText), 0644)
 }
