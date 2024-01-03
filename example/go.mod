@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/gin-gonic/gin v1.9.1
-	github.com/go-chocolate/chocdoc v0.0.0-20240103022402-32798640f8c6
+	github.com/go-chocolate/chocdoc v0.0.3
 )
 
 require (
