@@ -1,12 +1,30 @@
 package doc
 
 import (
+	"fmt"
+	"net/http"
+	"reflect"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 
 	"github.com/go-chocolate/chocdoc/elements"
 )
+
+type HandlerType string
+
+const (
+	Function HandlerType = "function"
+	Struct   HandlerType = "struct"
+)
+
+type Router struct {
+	Method string
+	Path   string
+	Type   HandlerType
+	Name   string
+	Group  string //TODO
+}
 
 type document struct {
 	path        string      // the url path
@@ -16,10 +34,10 @@ type document struct {
 	summary     string      //
 	description string      //
 	header      KV          // headers
-	extra       KV          // custom fields
 	group       string      // group
 	request     interface{} // request model pointer
 	response    interface{} // response model pointer
+	kv          KV          //
 }
 
 func decode(docs []*document) Documents {
@@ -37,8 +55,8 @@ func decode(docs []*document) Documents {
 		if v.header == nil {
 			v.header = KV{}
 		}
-		if v.extra == nil {
-			v.extra = KV{}
+		if v.kv == nil {
+			v.kv = KV{}
 		}
 		if v.group == "" {
 			if n := strings.LastIndex(v.name, "/"); n >= 0 {
@@ -53,7 +71,7 @@ func decode(docs []*document) Documents {
 			Description: v.description,
 			Method:      v.method,
 			Header:      v.header,
-			Extra:       v.extra,
+			KV:          v.kv,
 			Req:         newDecoder(tree{}).decode(v.request),
 			Rsp:         newDecoder(tree{}).decode(v.response),
 			Group:       v.group,
@@ -63,8 +81,16 @@ func decode(docs []*document) Documents {
 	return documents
 }
 
-func Decode(g *gin.Engine, annotations map[string]*elements.Node) Documents {
-	routers := DecodeGin(g)
+func Decode(mux any, annotations map[string]*elements.Node) Documents {
+	var routers []*Router
+	switch m := mux.(type) {
+	case *gin.Engine:
+		routers = DecodeGin(m)
+	case *http.ServeMux:
+		routers = DecodeHTTPMux(m)
+	default:
+		panic(fmt.Errorf("unknown http router: %v", reflect.TypeOf(mux)))
+	}
 	docs := FromAnnotation(routers, annotations)
 	return decode(docs)
 }

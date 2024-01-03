@@ -14,7 +14,7 @@ type Document struct {
 	Rsp         *Model `json:"rsp"`
 	Group       string `json:"group"`
 	Header      KV     `json:"header"`
-	Extra       KV     `json:"extra"`
+	KV          KV     `json:"kv"`
 }
 
 type Documents []*Document

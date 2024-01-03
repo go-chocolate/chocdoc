@@ -1,8 +1,6 @@
 package chocdoc
 
 import (
-	"github.com/gin-gonic/gin"
-
 	"github.com/go-chocolate/chocdoc/elements"
 	"github.com/go-chocolate/chocdoc/internal/doc"
 )
@@ -16,6 +14,6 @@ type (
 	KV            = doc.KV
 )
 
-func Decode(engine *gin.Engine, annotations map[string]*elements.Node) Documents {
+func Decode(engine any, annotations map[string]*elements.Node) Documents {
 	return doc.Decode(engine, annotations)
 }

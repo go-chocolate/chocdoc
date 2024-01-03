@@ -7,15 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type GINRouter struct {
-	Method   string
-	Path     string
-	FuncName string
-	Group    string //TODO
-}
-
-func DecodeGin(e *gin.Engine) []*GINRouter {
-	var routers []*GINRouter
+func DecodeGin(e *gin.Engine) []*Router {
+	var routers []*Router
 	trees := reflect.ValueOf(e).Elem().FieldByName("trees")
 	for i := 0; i < trees.Len(); i++ {
 		tree := trees.Index(i)
@@ -26,8 +19,8 @@ func DecodeGin(e *gin.Engine) []*GINRouter {
 	return routers
 }
 
-func expandNode(method string, node reflect.Value) []*GINRouter {
-	var routers []*GINRouter
+func expandNode(method string, node reflect.Value) []*Router {
+	var routers []*Router
 	fullPath := node.FieldByName("fullPath").String()
 	children := node.FieldByName("children")
 	for i := 0; i < children.Len(); i++ {
@@ -43,9 +36,10 @@ func expandNode(method string, node reflect.Value) []*GINRouter {
 
 	handler := handlersChain.Index(handlersLength - 1)
 	handlerName := runtime.FuncForPC(handler.Pointer()).Name()
-	router := new(GINRouter)
+	router := new(Router)
 	router.Path = fullPath
-	router.FuncName = handlerName
+	router.Type = Function
+	router.Name = handlerName
 	router.Method = method
 	return append(routers, router)
 }

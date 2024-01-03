@@ -6,14 +6,14 @@ import (
 	"github.com/go-chocolate/chocdoc/elements"
 )
 
-func FromAnnotation(routers []*GINRouter, nodes map[string]*elements.Node) []*document {
+func FromAnnotation(routers []*Router, nodes map[string]*elements.Node) []*document {
 	var docs []*document
 	for _, router := range routers {
-		ele := nodes[router.FuncName]
+		ele := nodes[router.Name]
 		var doc = &document{
 			path:    router.Path,
 			method:  router.Method,
-			handler: router.FuncName,
+			handler: router.Name,
 		}
 		if ele == nil {
 			docs = append(docs, doc)
@@ -26,6 +26,7 @@ func FromAnnotation(routers []*GINRouter, nodes map[string]*elements.Node) []*do
 			}
 			var key = ann.Content[:n]
 			var content = strings.TrimSpace(ann.Content[n+1:])
+			doc.kv.Add(key, content)
 			switch key {
 			case "req", "request":
 				if len(ann.Relation) > 0 {
@@ -49,12 +50,6 @@ func FromAnnotation(routers []*GINRouter, nodes map[string]*elements.Node) []*do
 				}
 				k, v := splitKV(content)
 				doc.header.Add(k, v)
-			case "extra":
-				if doc.extra == nil {
-					doc.extra = KV{}
-				}
-				k, v := splitKV(content)
-				doc.extra.Add(k, v)
 			}
 
 			if strings.HasPrefix(ann.Content, "req") {
