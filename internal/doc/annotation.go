@@ -14,6 +14,7 @@ func FromAnnotation(routers []*Router, nodes map[string]*elements.Node) []*docum
 			path:    router.Path,
 			method:  router.Method,
 			handler: router.Name,
+			kv:      KV{},
 		}
 		if ele == nil {
 			docs = append(docs, doc)
