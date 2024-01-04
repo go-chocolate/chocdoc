@@ -51,3 +51,11 @@ func (a Documents) Group(seps ...string) *DocumentGroup {
 	}
 	return groups
 }
+
+func (a Documents) Split() map[string]Documents {
+	var results = make(map[string]Documents)
+	for _, doc := range a {
+		results[doc.Path] = append(results[doc.Path], doc)
+	}
+	return results
+}

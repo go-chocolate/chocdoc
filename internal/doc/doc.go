@@ -53,10 +53,10 @@ func decode(docs []*document) Documents {
 			}
 		}
 		if v.header == nil {
-			v.header = KV{}
+			v.header = kvMap{}
 		}
 		if v.kv == nil {
-			v.kv = KV{}
+			v.kv = kvMap{}
 		}
 		if v.group == "" {
 			if n := strings.LastIndex(v.name, "/"); n >= 0 {

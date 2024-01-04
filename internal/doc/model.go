@@ -236,13 +236,13 @@ func DecodeModel(v interface{}) *Model {
 
 type StructTag string
 
-func (tag StructTag) Lookups() KV {
+func (t StructTag) Lookups() KV {
 
 	// When modifying this code, also update the validateStructTag code
 	// in cmd/vet/structtag.go.
 
-	kv := KV{}
-
+	kv := kvMap{}
+	tag := string(t)
 	for tag != "" {
 		// Skip leading space.
 		i := 0

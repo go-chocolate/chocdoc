@@ -2,6 +2,7 @@ package jsonutil
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"strings"
 )
@@ -63,10 +64,6 @@ func (b *JsonBuilder) WriteField(key string, val any) {
 	}
 }
 
-//func (b *JsonBuilder) WriteFieldArray(key string, val ...any) {
-//	//TODO
-//}
-
 func (b *JsonBuilder) WriteJSON(key string, json string) {
 	if b.hasField {
 		b.buf.Write([]byte{','})
@@ -74,6 +71,11 @@ func (b *JsonBuilder) WriteJSON(key string, json string) {
 	b.hasField = true
 
 	fmt.Fprintf(b.buf, "\"%s\": %s", key, json)
+}
+
+func (b *JsonBuilder) WriteJSONAny(key string, v any) {
+	data, _ := json.Marshal(v)
+	b.WriteJSON(key, string(data))
 }
 
 func (b *JsonBuilder) WriteJSONArray(key string, array ...string) {

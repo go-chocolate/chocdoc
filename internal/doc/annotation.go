@@ -14,7 +14,7 @@ func FromAnnotation(routers []*Router, nodes map[string]*elements.Node) []*docum
 			path:    router.Path,
 			method:  router.Method,
 			handler: router.Name,
-			kv:      KV{},
+			kv:      kvMap{},
 		}
 		if ele == nil {
 			docs = append(docs, doc)
@@ -28,7 +28,7 @@ func FromAnnotation(routers []*Router, nodes map[string]*elements.Node) []*docum
 			var key = ann.Content[:n]
 			var content = strings.TrimSpace(ann.Content[n+1:])
 			doc.kv.Add(key, content)
-			switch key {
+			switch strings.ToLower(key) {
 			case "req", "request":
 				if len(ann.Relation) > 0 {
 					doc.request = ann.Relation[0]
@@ -47,7 +47,7 @@ func FromAnnotation(routers []*Router, nodes map[string]*elements.Node) []*docum
 				doc.group = content
 			case "header":
 				if doc.header == nil {
-					doc.header = KV{}
+					doc.header = kvMap{}
 				}
 				k, v := splitKV(content)
 				doc.header.Add(k, v)
