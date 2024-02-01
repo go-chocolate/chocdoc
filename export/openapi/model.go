@@ -2,6 +2,7 @@ package openapi
 
 import (
 	"encoding/json"
+	"fmt"
 	"strings"
 )
 
@@ -113,24 +114,35 @@ func (s *Schema) Copy() *Schema {
 	return copied
 }
 
-func (s *Schema) Extend(schema *Schema, field string) bool {
-	switch s.Type {
-	case TypeObject:
-		if s.Properties[field] != nil {
-			s.Properties[field] = schema
-			return true
+func (s *Schema) Extend(schema *Schema, field string) error {
+	fields := strings.Split(field, ".")
+	var next = s
+	for i, v := range fields {
+		if next == nil {
+			return fmt.Errorf("schema did not contain field '%s'", strings.Join(fields[:i+1], "."))
 		}
-		for _, prop := range s.Properties {
-			if prop.Extend(schema, field) {
-				return true
+		switch next.Type {
+		case TypeObject:
+			if i == len(fields)-1 {
+				next.Properties[v] = schema
+				return nil
+			} else {
+				next = next.Properties[v]
+				continue
 			}
-		}
-	case TypeArray:
-		if s.Items.Extend(schema, field) {
-			return true
+		case TypeArray:
+			if i == len(fields)-1 {
+				next.Items = schema
+				return nil
+			} else {
+				next = next.Items
+				continue
+			}
+		default:
+			return fmt.Errorf("schema field '%s' with type '%s' cannot be extended", strings.Join(fields[:i+1], "."), next.Type)
 		}
 	}
-	return false
+	return nil
 }
 
 type Content struct {

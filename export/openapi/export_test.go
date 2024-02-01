@@ -38,7 +38,7 @@ func TestExport(t *testing.T) {
 				},
 				Array: 0,
 			},
-			KV: doc.NewKV(map[string]string{"ResponseExtend": "response data"}),
+			KV: doc.NewKV(map[string]string{"ResponseExtend": "response.data"}),
 		},
 	}
 
@@ -48,24 +48,4 @@ func TestExport(t *testing.T) {
 		t.Error(err)
 	}
 	t.Log(swagger.JSON())
-}
-
-type Response struct {
-	Code    int    `json:"code"`
-	Data    string `json:"data"`
-	Message string `json:"message"`
-}
-
-type Info struct {
-	Name  string `json:"name"`
-	Value int    `json:"value"`
-}
-
-func TestSchemaExtend(t *testing.T) {
-	response := NewSchema(doc.DecodeModel(&Response{}), "json")
-	info := NewSchema(doc.DecodeModel(&Info{}), "json")
-
-	t.Log(response)
-	response.Extend(info, "data")
-	t.Log(response)
 }

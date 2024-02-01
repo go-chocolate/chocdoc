@@ -117,7 +117,7 @@ func (b *builder) buildRequestFormSchema(api *API, document *doc.Document) {
 	var body = NewSchema(document.Req, "form")
 	if extend := strings.TrimSpace(document.KV.Get("RequestExtend")); extend != "" {
 		var extendName, extendField string
-		if n := strings.Index(extend, " "); n > 0 {
+		if n := strings.Index(extend, "."); n > 0 {
 			extendName = strings.TrimSpace(extend[:n])
 			extendField = strings.TrimSpace(extend[n+1:])
 		} else {
