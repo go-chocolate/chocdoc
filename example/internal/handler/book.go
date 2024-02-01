@@ -64,3 +64,11 @@ type BookDetailResponse struct {
 func BookDetail(ctx *gin.Context) {
 
 }
+
+type ExampleRequest struct{}
+type ExampleResponse struct{}
+
+// ExampleDoc
+// @request [ExampleRequest]
+// @response [ExampleResponse]
+func ExampleDoc(ctx *gin.Context) {}

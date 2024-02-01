@@ -4,6 +4,7 @@ import "strings"
 
 type KV interface {
 	Get(key string) string
+	GetAlias(key string, alias ...string) string
 	Gets(key string) []string
 	Set(key, value string)
 	Add(key string, value ...string)
@@ -32,6 +33,18 @@ func (kv kvMap) Get(key string) string {
 	vs := kv[strings.ToLower(key)]
 	if len(vs) > 0 {
 		return vs[0]
+	}
+	return ""
+}
+
+func (kv kvMap) GetAlias(key string, alias ...string) string {
+	if val := kv.Get(key); val != "" {
+		return val
+	}
+	for _, k := range alias {
+		if val := kv.Get(k); val != "" {
+			return val
+		}
 	}
 	return ""
 }

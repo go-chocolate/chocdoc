@@ -30,3 +30,13 @@ func TestSchemaExtend(t *testing.T) {
 	t.Log(response.Extend(info, "data.data"))
 	t.Log(response)
 }
+
+func TestNewSchemaFromJSON(t *testing.T) {
+	schema, err := NewSchemaFromJSON([]byte(`{"code":200,"data":[{"name":"1"}]}`))
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	t.Log(schema)
+	t.Log(schema.String())
+}

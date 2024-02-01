@@ -23,7 +23,8 @@ const (
 	TypeString  Type = "string"
 	TypeInteger Type = "integer"
 
-	FormatBinary  Format = "binary"
+	FormatBinary Format = "binary"
+
 	MethodGet     Method = "get"
 	MethodHead    Method = "head"
 	MethodPost    Method = "post"

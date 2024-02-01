@@ -1,0 +1,22 @@
+# the chocdoc export option.
+#
+# root<string>: the chocdoc exporter running directory.
+#
+# output<string>: the directory where the chocdoc exporter generated code saved.
+#
+# replaces<map[string][]string>: the import path alias. 
+# Some package's name is different from its folder name, may need alias to make sure 
+# the chocdoc exporter be able to found the correct import path.
+#
+# example: 
+#
+# root: .
+# output: ./chocdoc
+# replace: 
+#   - github.com/example/example/v1: 
+#       - example1
+#       - example2
+
+root: testdata
+output: testdata/chocdoc
+replaces: {}

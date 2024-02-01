@@ -42,7 +42,10 @@ func TestExport(t *testing.T) {
 		},
 	}
 
-	schemas := map[string]*Schema{"response": NewSchema(doc.DecodeModel(&Response{}), "json")}
+	schemas := map[string]*Schema{
+		//"response": NewSchema(doc.DecodeModel(&Response{}), "json"),
+		"response": NewSchema(doc.DecodeModel(&Response{}), "json"),
+	}
 	swagger, err := Export(documents, WithSchemas(schemas))
 	if err != nil {
 		t.Error(err)

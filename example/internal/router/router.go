@@ -13,4 +13,8 @@ func Router(e gin.IRouter) {
 	group.POST("/book", handler.CreateBook)
 	group.PUT("/book/{id}", handler.UpdateBook)
 	group.DELETE("/book/{id}", handler.DeleteBook)
+
+	group.GET("/example", func(ctx *gin.Context) {
+		//do something
+	}, handler.ExampleDoc)
 }

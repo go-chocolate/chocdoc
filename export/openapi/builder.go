@@ -54,11 +54,15 @@ func (b *builder) buildAPI(document *doc.Document) (*API, error) {
 		Description: document.Description,
 		Tags:        document.KV.Gets("tags"),
 		Parameters:  b.buildRequestParameters(document),
+		RequestBody: new(Body),
 	}
 
 	b.buildRequestFormSchema(api, document)
 	b.buildRequestJsonSchema(api, document)
+	b.buildRequestCustomSchema(api, document)
+
 	b.buildResponseSchema(api, document)
+	b.buildResponseCustomSchema(api, document)
 
 	return api, nil
 }
@@ -115,7 +119,7 @@ func (b *builder) buildRequestFormSchema(api *API, document *doc.Document) {
 	}
 
 	var body = NewSchema(document.Req, "form")
-	if extend := strings.TrimSpace(document.KV.Get("RequestExtend")); extend != "" {
+	if extend := strings.TrimSpace(document.KV.GetAlias("RequestExtend", "Request-Extend")); extend != "" {
 		var extendName, extendField string
 		if n := strings.Index(extend, "."); n > 0 {
 			extendName = strings.TrimSpace(extend[:n])
@@ -174,6 +178,31 @@ func (b *builder) buildRequestJsonSchema(api *API, document *doc.Document) {
 	api.RequestBody.Content["application/json"] = &Content{Schema: body}
 }
 
+func (b *builder) buildRequestCustomSchema(api *API, document *doc.Document) {
+	if api.RequestBody.Content != nil {
+		return
+	}
+	val := document.KV.GetAlias("req", "request")
+	if val == "" || val[0] != '$' {
+		return
+	}
+
+	switch val {
+	case "$binary":
+		api.RequestBody.Content = map[string]*Content{
+			"application/octet-stream": {Schema: &Schema{Type: TypeString, Format: FormatBinary}},
+		}
+	default:
+		schema, err := NewSchemaFromJSON([]byte(val[1:]))
+		if err != nil {
+			return
+		}
+		api.RequestBody.Content = map[string]*Content{
+			"application/json": {Schema: schema},
+		}
+	}
+}
+
 func (b *builder) buildResponseSchema(api *API, document *doc.Document) {
 	if document.Rsp == nil {
 		//document.KV.Get("")
@@ -201,5 +230,36 @@ func (b *builder) buildResponseSchema(api *API, document *doc.Document) {
 	api.Responses["200"] = &Body{
 		Description: "",
 		Content:     map[string]*Content{"application/json": {Schema: body}},
+	}
+}
+
+func (b *builder) buildResponseCustomSchema(api *API, document *doc.Document) {
+	if api.Responses != nil {
+		return
+	}
+	api.Responses = map[string]*Body{}
+
+	val := document.KV.GetAlias("rsp", "response")
+	if val == "" || val[0] != '$' {
+		return
+	}
+	switch val {
+	case "$binary":
+		api.Responses["200"] = &Body{
+			Description: "",
+			Content: map[string]*Content{
+				"application/octet-stream": {Schema: &Schema{Type: TypeString, Format: FormatBinary}},
+			},
+		}
+	default:
+		schema, err := NewSchemaFromJSON([]byte(val[1:]))
+		if err != nil {
+			return
+		}
+		api.Responses["200"] = &Body{
+			Content: map[string]*Content{
+				"application/json": {Schema: schema},
+			},
+		}
 	}
 }
